@@ -5,15 +5,22 @@ TYPE = ps-exe
 
 # The list of sources files to compile within the binary.
 SRCS = \
-hello.cpp \
+src/hello.cpp \
 
+UNAME_S := $(shell uname -s)
 # Setting the minimum version of the C++. C++-20 is the minimum required version by PSYQo.
 CXXFLAGS = -std=c++20
 
 # This will activate the PSYQo library and the rest of the toolchain.
 include third_party/nugget/psyqo/psyqo.mk
 
-
+# emu will run depending on os version (since i dev on both macos and linux)
 emu: all
+	ifeq($(UNAME_S),"Linux")
 	/home/un/Downloads/PCSX-Redux-HEAD-x86_64.AppImage -run -exe $(TARGET).$(TYPE) &
+	else
+		ifeq($(UNAME_S),"Darwin")
+		/Applications/PCSX-Redux.app/Contents/MacOS/PCSX-Redux -run -exe $(TARGET).$(TYPE) -debugger -fastboot &
+		endif
+	endif
 

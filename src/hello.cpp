@@ -24,10 +24,10 @@ SOFTWARE.
 
 */
 
-#include "psyqo/application.hh"
-#include "psyqo/font.hh"
-#include "psyqo/gpu.hh"
-#include "psyqo/scene.hh"
+#include "../third_party/nugget/psyqo/application.hh"
+#include "../third_party/nugget/psyqo/font.hh"
+#include "../third_party/nugget/psyqo/gpu.hh"
+#include "../third_party/nugget/psyqo/scene.hh"
 
 namespace {
 
