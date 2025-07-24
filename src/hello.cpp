@@ -1,34 +1,10 @@
-/*
-
-MIT License
-
-Copyright (c) 2022 PCSX-Redux authors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-*/
 
 #include "../third_party/nugget/psyqo/application.hh"
 #include "../third_party/nugget/psyqo/font.hh"
 #include "../third_party/nugget/psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/scene.hh"
-
+#include "../third_party/nugget/psyqo/primitives.hh"
+#include "FontManager.h"
 namespace {
 
 // A PSYQo software needs to declare one `Application` object.
@@ -40,6 +16,8 @@ class Hello final : public psyqo::Application {
   public:
     psyqo::Font<> m_systemFont;
     psyqo::Font<> m_romFont;
+    FontManager m_font;
+
 };
 
 // And we need at least one scene to be created.
@@ -76,31 +54,55 @@ void Hello::createScene() {
     // system font is {{.x = 960, .y = 464}}, and the default location for the kernel
     // rom font is {{.x = 960, .y = 422}}, so we need to nudge the kernel rom
     // font up a bit.
-    m_systemFont.uploadSystemFont(gpu());
-    m_romFont.uploadKromFont(gpu(), {{.x = 960, .y = static_cast<int16_t>(512 - 48 - 90)}});
+    // fontknife convert -G " !\"#\$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~" Sapface.ttf font1.png
+ //  m_systemFont.uploadSystemFont(gpu());
+    m_font.uploadFont(gpu(), {{.x = 767, .y = 441}}, {{.w = 256, .h = 71}});
+    //m_romFont.uploadKromFont(gpu(), {{.x = 960, .y = static_cast<int16_t>(512 - 48 - 90)}});
     pushScene(&helloScene);
 }
-
+struct SpriteFragment {
+    uint32_t head;
+    psyqo::Prim::Sprite sprite
+    size_t getActualFragmentSize() const {
+        return sizeof(sprite) /  sizeof(uint32_t);
+    }
+};
+struct TPageFragment {
+    uint32_t head;
+    psyqo::Prim::TPage page;
+    size_t getActualFragmentSize() const {
+        return sizeof(page) /  sizeof(uint32_t);
+    }
+};
 void HelloScene::frame() {
-    if (m_anim == 0) {
-        m_direction = true;
-    } else if (m_anim == 255) {
-        m_direction = false;
-    }
+//    if (m_anim == 0) {
+//        m_direction = true;
+//    } else if (m_anim == 255) {
+//        m_direction = false;
+//    }
     psyqo::Color bg{{.r = 0, .g = 64, .b = 91}};
-    bg.r = m_anim;
+//    bg.r = m_anim;
     hello.gpu().clear(bg);
-    if (m_direction) {
-        m_anim++;
-    } else {
-        m_anim--;
-    }
+//    if (m_direction) {
+//        m_anim++;
+//    } else {
+//        m_anim--;
+//    }
 
     psyqo::Color c = {{.r = 255, .g = 255, .b = static_cast<uint8_t>(255 - m_anim)}};
     hello.m_systemFont.print(hello.gpu(), "Song: I was here (Live in Session)", {{.x = 16, .y = 32}}, c);
-    hello.m_systemFont.print(hello.gpu(), "Artist: Lava Pigeon", {{.x = 16, .y = 64}}, c);
-    hello.m_systemFont.print(hello.gpu(), "Tip: Get to the point John Lennon", {{.x = 16, .y = 115}}, c);
-    hello.m_systemFont.print(hello.gpu(), "Loading...", {{.x = 96, .y = 200}}, c);
+//    hello.m_systemFont.print(hello.gpu(), "Artist: Lava Pigeon", {{.x = 16, .y = 64}}, c);
+//    hello.m_systemFont.print(hello.gpu(), "Tip: Get to the point John Lennon", {{.x = 16, .y = 79}}, c);
+//    hello.m_systemFont.print(hello.gpu(), "Loading...", {{.x = 96, .y = 200}}, c);
+//    hello.m_systemFont.print(hello.gpu(), "the quick brown fox jumps over the lazy dog", {{.x = 0, .y = 100}}, c);
+//    hello.m_systemFont.print(hello.gpu(), "THE QUICK BROWN FOX JUMPS OVER THE LAZY", {{.x = 0, .y = 130}}, c);
+//    hello.m_systemFont.print(hello.gpu(), "!?/#`\"£$%^&*()@~' dog DOG", {{.x = 0, .y = 150}}, c);
+    TPageFragment pageFrag;
+    psyqo::Prim::TPage page;
+    psyqo::Prim::TPageAttr::
+    pageFrag.page =  };
+    gpu().sendFragment(fragment);
+
 }
 
 int main() { return hello.run(); }

@@ -3,3 +3,9 @@
 *.ps-exe
 *.o
 *.map
+# tools i don't own but are used in the process
+# https://github.com/spicyjpeg/ps1-bare-metal/blob/main/tools/convertImage.py
+tools/convertImage.py
+
+# auto generated files
+src/mainFont.h
