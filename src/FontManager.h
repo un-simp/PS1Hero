@@ -6,6 +6,7 @@
 
 class FontManager{
 private:
+    //xPos:  yPos: Width:  Height:  Advance:
     const int asciiLookup[0x7f][5] = {
             {47,  200, 14, 19, 0},
             {121, 37,  4,  17, 24},
