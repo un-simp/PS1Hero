@@ -61,42 +61,17 @@ void Hello::createScene() {
     //m_romFont.uploadKromFont(gpu(), {{.x = 960, .y = static_cast<int16_t>(512 - 48 - 90)}});
     pushScene(&helloScene);
 }
-struct SpriteFragment {
-    uint32_t head;
-    psyqo::Prim::Sprite sprite;
-    size_t getActualFragmentSize() const {
-        return sizeof(sprite) /  sizeof(uint32_t);
-    }
-};
-struct TPageFragment {
-    uint32_t head;
-    psyqo::Prim::TPage page;
-    size_t getActualFragmentSize() const {
-        return sizeof(page) /  sizeof(uint32_t);
-    }
-};
+
 void HelloScene::frame() {
     psyqo::Color bg{{.r = 0, .g = 64, .b = 91}};
     hello.gpu().clear(bg);
-    TPageFragment pageFrag;
-    psyqo::Prim::TPage page;
-    psyqo::PrimPieces::TPageAttr pageAttr;
-    pageAttr.setPageX(12)
-            .setPageY(1)
-            .set(psyqo::Prim::TPageAttr::Tex16Bits);
-    page.attr = pageAttr;
-    pageFrag.page = page;
-    gpu().sendFragment(pageFrag);
-    SpriteFragment spriteFrag;
-    psyqo::Prim::Sprite sprite;
-    psyqo::PrimPieces::TexInfo texInfo;
-    texInfo.u = 48;
-    texInfo.v = 20;
-    sprite.texInfo = texInfo;
-    sprite.position = {{50,50}};
-    sprite.size = {{14,17}};
-    spriteFrag.sprite = sprite;
-    gpu().sendFragment(spriteFrag);
+//    hello.m_font.print(hello.gpu(), "Song: I was here (Live in Session)", {{.x = 16, .y = 32}});
+//    hello.m_font.print(hello.gpu(), "Artist: Lava Pigeon", {{.x = 16, .y = 64}});
+//    hello.m_font.print(hello.gpu(), "Tip: Get to the point John Lennon", {{.x = 16, .y = 79}});
+//    hello.m_font.print(hello.gpu(), "Loading...", {{.x = 96, .y = 200}});
+    hello.m_font.print(hello.gpu(), "the quick brown fox jumps over the lazy dog", {{.x = 0, .y = 100}});
+    hello.m_font.print(hello.gpu(), "THE QUICK BROWN FOX JUMPS OVER THE LAZY", {{.x = 0, .y = 130}});
+    hello.m_font.print(hello.gpu(), "!?/#`\"£$%^&*()@~' dog DOG", {{.x = 0, .y = 150}});
 
 
 }

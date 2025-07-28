@@ -3,9 +3,23 @@
 //
 #include "psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/gpu.hh"
-
+#include "../third_party/nugget/psyqo/primitives.hh"
 class FontManager{
 private:
+    struct SpriteFragment {
+        uint32_t head;
+        psyqo::Prim::Sprite sprite;
+        size_t getActualFragmentSize() const {
+            return sizeof(sprite) /  sizeof(uint32_t);
+        }
+    };
+    struct TPageFragment {
+        uint32_t head;
+        psyqo::Prim::TPage page;
+        size_t getActualFragmentSize() const {
+            return sizeof(page) /  sizeof(uint32_t);
+        }
+    };
     //xPos:  yPos: Width:  Height:  Advance:
     const int asciiLookup[0x7f][5] = {
             {47,  200, 14, 19, 0},
@@ -110,5 +124,4 @@ private:
 public:
     void uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size);
     void print(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
-
 };
