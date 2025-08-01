@@ -3,16 +3,14 @@
 //
 
 #include "StageScene.h"
-class StageScene final : public psyqo::Scene{
-    void frame() override;
-    void start() override;
 
-};
-
+#include "assets.h"
 void StageScene::frame() {
 
 }
 
-void StageScene::start() {
+void StageScene::start(StartReason reason) {
     // TODO: upload the stage and notes to VRAM
+    psyqo::Rect region = {.pos = {{770,5}}, .size = {{121,200}}};
+    gpu().uploadToVRAM(PS1HeroAssets::getStageData(),region);
 }

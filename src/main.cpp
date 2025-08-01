@@ -27,7 +27,7 @@ StageScene stageScene;
 
 }  // namespace
 
-void Hello::prepare() {
+void PS1HeroMain::prepare() {
     psyqo::GPU::Configuration config;
     config.set(psyqo::GPU::Resolution::W320)
         .set(psyqo::GPU::VideoMode::AUTO)
@@ -36,9 +36,9 @@ void Hello::prepare() {
     gpu().initialize(config);
 }
 
-void Hello::createScene() {
+void PS1HeroMain::createScene() {
     m_font.uploadFont(gpu(), {{.x = 767, .y = 256}}, {{.w = 256, .h = 71}});
-    pushScene(&helloScene);
+    pushScene(&stageScene);
 }
 
 void HelloScene::frame() {

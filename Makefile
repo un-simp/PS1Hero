@@ -8,6 +8,8 @@ SRCS = \
 src/main.cpp \
 src/FontManager.cpp\
 src/StageScene.cpp\
+src/assets.cpp\
+
 
 UNAME_S := $(shell uname -s)
 # Setting the minimum version of the C++. C++-20 is the minimum required version by PSYQo.

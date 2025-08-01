@@ -1,10 +1,8 @@
 //
 // Created by un on 31/07/2025.
 //
-
-#ifndef PS1HERO_STAGESCENE_H
-#define PS1HERO_STAGESCENE_H
+#include "../third_party/nugget/psyqo/scene.hh"
 class StageScene final : public psyqo::Scene{
-
+    void frame() override;
+    void start(StartReason reason) override;
 };
-#endif //PS1HERO_STAGESCENE_H

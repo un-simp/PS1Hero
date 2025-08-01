@@ -2,16 +2,6 @@
 // Created by un on 20/07/2025.
 //
 // ok so you know how we are embedding at compile time? yeah im importing this with assembly, this is so fucking cursed
-#define IMPORT_BIN(file, sym) asm (\
-    ".section .rodata." #sym "\n"        /* Change section */\
-    ".balign 4\n"                        /* Word alignment */\
-    ".global " #sym "\n"                 /* Export the object address */\
-    #sym ":\n"                           /* Define the object label */\
-    ".incbin \"" file "\"\n"             /* Import the file */\
-    ".global " #sym "_size\n"            /* Export the object size */\
-    ".set " #sym "_size, . - " #sym "\n" /* Define the object size */\
-    ".balign 4\n"                        /* Word alignment */\
-    ".section \".text\"\n")              /* Restore section */
 #include "FontManager.h"
 #include "psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/primitives.hh"
@@ -20,7 +10,7 @@
 // this feels wrong, the actual texture is embedded here at compile time, kill me.
 void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size) {
      psyqo::Rect region = {.pos = location, .size = size};
-     gpu.uploadToVRAM(ps1heroAssets::getFontData(),region);
+     gpu.uploadToVRAM(PS1HeroAssets::getFontData(),region);
 }
 /**
  * @brief These method immediately print text to the screen.
