@@ -15,7 +15,7 @@ CXXFLAGS = -std=c++20
 
 # This will activate the PSYQo library and the rest of the toolchain.
 include third_party/nugget/psyqo/psyqo.mk
-
+# TODO: build assets binaries at runtime (maybe)
 # emu will run depending on os version (since i dev on both macos and linux)
 emu: all
 	ifeq($(UNAME_S),"Linux")
