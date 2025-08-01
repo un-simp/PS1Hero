@@ -15,16 +15,18 @@
 #include "FontManager.h"
 #include "psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/primitives.hh"
+#include "assets.h"
 
 // this feels wrong, the actual texture is embedded here at compile time, kill me.
-IMPORT_BIN("assets/font.bin",fontData);
+//IMPORT_BIN("assets/font.bin",fontData);
 void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size) {
-     extern const uint16_t fontData[], _sizeof_fontData[];
+//     extern const uint16_t fontData[], _sizeof_fontData[];
      psyqo::Rect region = {.pos = location, .size = size};
-     gpu.uploadToVRAM(fontData,region);
+     gpu.uploadToVRAM(ps1heroAssets::getFontData(),region);
 }
 /**
  * @brief These method immediately print text to the screen.
+ * you cannot scale this
  */
 void FontManager::print(psyqo::GPU &gpu, const char* text, psyqo::Vertex location) {
     TPageFragment pageFrag;
