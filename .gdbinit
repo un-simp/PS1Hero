@@ -1,6 +1,6 @@
 define target remote
 target extended-remote $arg0
-symbol-file hello.elf
+symbol-file ps1HeroMain.elf
 monitor reset shellhalt
-load hello.elf
+load ps1HeroMain.elf
 end

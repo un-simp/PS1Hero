@@ -5,8 +5,9 @@ TYPE = ps-exe
 
 # The list of sources files to compile within the binary.
 SRCS = \
-src/hello.cpp \
+src/main.cpp \
 src/FontManager.cpp\
+src/StageScene.cpp\
 
 UNAME_S := $(shell uname -s)
 # Setting the minimum version of the C++. C++-20 is the minimum required version by PSYQo.

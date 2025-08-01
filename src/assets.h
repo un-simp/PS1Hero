@@ -3,7 +3,7 @@
 //
 // header only class that embeds all the game assets as static objects in the binary
 #ifndef PS1HERO_ASSETS_H
-// function to
+// function that actually does the embedding
 #define IMPORT_BIN(file, sym) asm (\
     ".section .rodata." #sym "\n"        /* Change section */\
     ".balign 4\n"                        /* Word alignment */\
@@ -11,7 +11,7 @@
     #sym ":\n"                           /* Define the object label */\
     ".incbin \"" file "\"\n"             /* Import the file */\
     ".global " #sym "_size\n"            /* Export the object size */\
-    ".set " #sym "_size, . - " #sym "\n" /* Define the object size */\
+    ".set " #sym "_size, . - " #sym "\n" /* Define the object size */   \
     ".balign 4\n"                        /* Word alignment */\
     ".section \".text\"\n")              /* Restore section */
 IMPORT_BIN("assets/font.bin",fontData);

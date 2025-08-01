@@ -14,5 +14,5 @@ void StageScene::frame() {
 }
 
 void StageScene::start() {
-    // upload the stage and notes to VRAM
+    // TODO: upload the stage and notes to VRAM
 }

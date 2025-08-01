@@ -18,9 +18,7 @@
 #include "assets.h"
 
 // this feels wrong, the actual texture is embedded here at compile time, kill me.
-//IMPORT_BIN("assets/font.bin",fontData);
 void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size) {
-//     extern const uint16_t fontData[], _sizeof_fontData[];
      psyqo::Rect region = {.pos = location, .size = size};
      gpu.uploadToVRAM(ps1heroAssets::getFontData(),region);
 }
@@ -66,7 +64,7 @@ void FontManager::print(psyqo::GPU &gpu, const char* text, psyqo::Vertex locatio
         location = {static_cast<int16_t>(location.x + 15),location.y };
     }
 }
-
+// TODO: make this functional
 void FontManager::printScaled(psyqo::GPU &gpu, const char *text, psyqo::Vertex location) {
     QuadFragment frag;
     psyqo::Prim::TexturedQuad texQuad;
