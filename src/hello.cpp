@@ -1,10 +1,9 @@
 
 #include "../third_party/nugget/psyqo/application.hh"
-#include "../third_party/nugget/psyqo/font.hh"
-#include "../third_party/nugget/psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/scene.hh"
 #include "../third_party/nugget/psyqo/primitives.hh"
 #include "FontManager.h"
+#include "StageScene.h"
 namespace {
 
 // A PSYQo software needs to declare one `Application` object.
@@ -32,6 +31,7 @@ class HelloScene final : public psyqo::Scene {
 // We're instantiating the two objects above right now.
 Hello hello;
 HelloScene helloScene;
+StageScene stageScene;
 
 }  // namespace
 

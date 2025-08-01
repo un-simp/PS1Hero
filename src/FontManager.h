@@ -131,4 +131,6 @@ private:
 public:
     void uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size);
     void print(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
+    void printScaled(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
+
 };
