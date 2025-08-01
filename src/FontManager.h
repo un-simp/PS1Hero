@@ -6,6 +6,13 @@
 #include "../third_party/nugget/psyqo/primitives.hh"
 class FontManager{
 private:
+    struct QuadFragment {
+        uint32_t head;
+        psyqo::Prim::TexturedQuad quad;
+        size_t getActualFragmentSize() const {
+            return sizeof(quad) /  sizeof(uint32_t);
+        }
+    };
     struct SpriteFragment {
         uint32_t head;
         psyqo::Prim::Sprite sprite;

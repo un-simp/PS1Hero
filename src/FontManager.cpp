@@ -64,3 +64,14 @@ void FontManager::print(psyqo::GPU &gpu, const char* text, psyqo::Vertex locatio
         location = {static_cast<int16_t>(location.x + 15),location.y };
     }
 }
+
+void FontManager::printScaled(psyqo::GPU &gpu, const char *text, psyqo::Vertex location) {
+    QuadFragment frag;
+    psyqo::Prim::TexturedQuad texQuad;
+    psyqo::PrimPieces::TPageAttr pageAttr;
+    pageAttr.setPageX(12)
+            .setPageY(1)
+                    // 16 bit textures can cross up to 4 texture pages
+            .set(psyqo::Prim::TPageAttr::Tex16Bits);
+    texQuad.tpage = pageAttr;
+}

@@ -14,8 +14,6 @@ class Hello final : public psyqo::Application {
     void createScene() override;
 
   public:
-    psyqo::Font<> m_systemFont;
-    psyqo::Font<> m_romFont;
     FontManager m_font;
 
 };
