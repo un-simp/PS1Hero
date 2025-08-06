@@ -9,6 +9,7 @@ class PS1HeroAssets {
 public:
     static uint16_t* getFontData();
     static uint16_t* getStageData();
+    static uint16_t* getNoteData();
 
 };
 

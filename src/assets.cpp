@@ -18,8 +18,11 @@
     ".section \".text\"\n")              /* Restore section */
 IMPORT_BIN("assets/font.bin",fontData);
 IMPORT_BIN("assets/teststage.bin",stageData);
+IMPORT_BIN("assets/testNote.bin",noteData);
+
 extern uint16_t fontData[];
 extern uint16_t stageData[];
+extern uint16_t noteData[];
 
 uint16_t* PS1HeroAssets::getFontData() {
     return fontData;
@@ -27,4 +30,7 @@ uint16_t* PS1HeroAssets::getFontData() {
 
 uint16_t* PS1HeroAssets::getStageData() {
     return stageData;
+}
+uint16_t* PS1HeroAssets::getNoteData() {
+    return noteData;
 }

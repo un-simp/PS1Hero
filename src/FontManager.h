@@ -6,27 +6,6 @@
 #include "../third_party/nugget/psyqo/primitives.hh"
 class FontManager{
 private:
-    struct QuadFragment {
-        uint32_t head;
-        psyqo::Prim::TexturedQuad quad;
-        size_t getActualFragmentSize() const {
-            return sizeof(quad) /  sizeof(uint32_t);
-        }
-    };
-    struct SpriteFragment {
-        uint32_t head;
-        psyqo::Prim::Sprite sprite;
-        size_t getActualFragmentSize() const {
-            return sizeof(sprite) /  sizeof(uint32_t);
-        }
-    };
-    struct TPageFragment {
-        uint32_t head;
-        psyqo::Prim::TPage page;
-        size_t getActualFragmentSize() const {
-            return sizeof(page) /  sizeof(uint32_t);
-        }
-    };
     //xPos:  yPos: Width:  Height:  Advance:
     const int asciiLookup[0x7f][5] = {
             {47,  200, 14, 19, 0},

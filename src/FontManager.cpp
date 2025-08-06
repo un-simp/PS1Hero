@@ -3,9 +3,8 @@
 //
 // ok so you know how we are embedding at compile time? yeah im importing this with assembly, this is so fucking cursed
 #include "FontManager.h"
-#include "psyqo/gpu.hh"
-#include "../third_party/nugget/psyqo/primitives.hh"
 #include "assets.h"
+#include "fragment.h"
 
 // this feels wrong, the actual texture is embedded here at compile time, kill me.
 void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size) {
