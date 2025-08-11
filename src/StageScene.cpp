@@ -3,7 +3,7 @@
 //
 
 #include "StageScene.h"
-//#include "EASTL/string.h"
+#include "EASTL/string.h"
 #include "assets.h"
 #include "main.hh"
 TPageFragment StageTPageF;
@@ -13,14 +13,37 @@ SpriteFragment NoteSpriteFunc;
 SpriteFragment StageScene::CreateNoteFragment(int pos) {
     SpriteFragment outputFrag;
     psyqo::PrimPieces::TexInfo noteTexInfo;
-    noteTexInfo.u = 2;
     noteTexInfo.v = 1;
     psyqo::Prim::Sprite noteSprite;
+    // pos 1 is 101, +24 for each pos
+//    eastl::string numStr = eastl::to_string(pos);
+//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{0,50}});
+    switch (pos){
+        case 1:
+            noteTexInfo.u = 2;
+            noteSprite.position = {{101,13}};
+        case 2:
+            noteTexInfo.u = 26;
+            noteSprite.position = {{125,13}};
+        case 3:
+            noteTexInfo.u = 50;
+            noteSprite.position = {{149,13}};
+        case 4:
+            noteTexInfo.u = 74;
+            noteSprite.position = {{173,13}};
+        case 5:
+            noteTexInfo.u = 98;
+            noteSprite.position = {{197,13}};
+
+    }
+//    numStr = eastl::to_string(noteSprite.position.x);
+//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{100,50}});
+//    numStr = eastl::to_string(noteTexInfo.u);
+//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{150,50}});
     noteSprite.texInfo = noteTexInfo;
     noteSprite.size = {{21,4}};
-    // pos 1 is 101, +24 for each pos
-    noteSprite.position = {{125+72,13}};
     outputFrag.sprite = noteSprite;
+//    g_ps1hero.gpu().sendFragment(StageTPageF);
     return outputFrag;
 }
 void StageScene::start(Scene::StartReason reason) {
@@ -54,17 +77,20 @@ void StageScene::frame() {
     g_ps1hero.gpu().sendFragment(StageTPageF);
     g_ps1hero.gpu().sendFragment(StageSpriteF);
     psyqo::Vertex notePos = NoteSpriteFunc.sprite.position;
-//    eastl::string numStr = eastl::to_string(notePos.y);
-//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{0,0}});
 
-    if (notePos.y >= static_cast<int16_t>(180)){
-        NoteSpriteFunc.sprite.position =  {{125+72,13}};
-    }else{
-        int16_t newPos = notePos.y+2;
-        NoteSpriteFunc.sprite.position = {{notePos.x, newPos}};
-    }
-    g_ps1hero.gpu().sendFragment(NoteSpriteFunc);
 
+//    if (notePos.y >= static_cast<int16_t>(180)){
+//        NoteSpriteFunc.sprite.position =  {{125+72,13}};
+//    }else{
+//        int16_t newPos = notePos.y+2;
+//        NoteSpriteFunc.sprite.position = {{notePos.x, newPos}};
+//    }
+//    g_ps1hero.gpu().sendFragment(NoteSpriteFunc);
+      g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
+//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(2));
+//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(3));
+//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(4));
+//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(5));
 }
 
 
