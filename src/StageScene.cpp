@@ -18,22 +18,28 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
     // pos 1 is 101, +24 for each pos
 //    eastl::string numStr = eastl::to_string(pos);
 //    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{0,50}});
+    // ReSharper disable once CppDefaultCaseNotHandledInSwitchStatement
     switch (pos){
         case 1:
             noteTexInfo.u = 2;
             noteSprite.position = {{101,13}};
+            break;
         case 2:
             noteTexInfo.u = 26;
             noteSprite.position = {{125,13}};
+            break;
         case 3:
             noteTexInfo.u = 50;
             noteSprite.position = {{149,13}};
+            break;
         case 4:
             noteTexInfo.u = 74;
             noteSprite.position = {{173,13}};
+            break;
         case 5:
             noteTexInfo.u = 98;
             noteSprite.position = {{197,13}};
+            break;
 
     }
 //    numStr = eastl::to_string(noteSprite.position.x);
@@ -76,7 +82,7 @@ void StageScene::frame() {
     g_ps1hero.gpu().clear(col);
     g_ps1hero.gpu().sendFragment(StageTPageF);
     g_ps1hero.gpu().sendFragment(StageSpriteF);
-    psyqo::Vertex notePos = NoteSpriteFunc.sprite.position;
+    //psyqo::Vertex notePos = NoteSpriteFunc.sprite.position;
 
 
 //    if (notePos.y >= static_cast<int16_t>(180)){
@@ -86,7 +92,11 @@ void StageScene::frame() {
 //        NoteSpriteFunc.sprite.position = {{notePos.x, newPos}};
 //    }
 //    g_ps1hero.gpu().sendFragment(NoteSpriteFunc);
-      g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
+
+    if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
+        g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
+    }
+
 //    g_ps1hero.gpu().sendFragment(CreateNoteFragment(2));
 //    g_ps1hero.gpu().sendFragment(CreateNoteFragment(3));
 //    g_ps1hero.gpu().sendFragment(CreateNoteFragment(4));
