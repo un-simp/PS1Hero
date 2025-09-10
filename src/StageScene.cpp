@@ -3,12 +3,15 @@
 //
 
 #include "StageScene.h"
-#include "EASTL/string.h"
+#include "EASTL/vector.h"
 #include "assets.h"
 #include "main.hh"
+
 TPageFragment StageTPageF;
 SpriteFragment StageSpriteF;
-SpriteFragment NoteSpriteFunc;
+eastl::vector<SpriteFragment> notes;
+
+
 
 SpriteFragment StageScene::CreateNoteFragment(int pos) {
     SpriteFragment outputFrag;
@@ -22,18 +25,23 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
         case 1:
             noteTexInfo.u = 2;
             noteSprite.position = {{101,13}};
+            break;
         case 2:
             noteTexInfo.u = 26;
             noteSprite.position = {{125,13}};
+            break;
         case 3:
             noteTexInfo.u = 50;
             noteSprite.position = {{149,13}};
+            break;
         case 4:
             noteTexInfo.u = 74;
             noteSprite.position = {{173,13}};
+            break;
         case 5:
             noteTexInfo.u = 98;
             noteSprite.position = {{197,13}};
+            break;
 
     }
 //    numStr = eastl::to_string(noteSprite.position.x);
@@ -68,7 +76,18 @@ void StageScene::start(Scene::StartReason reason) {
     StageSprite.size = {{121,200}};
     StageSprite.position = {{99,10}};
     StageSpriteF.sprite = StageSprite;
-    NoteSpriteFunc = CreateNoteFragment(1);
+    notes.push_back(CreateNoteFragment(1));
+    notes.push_back(CreateNoteFragment(2));
+    notes.push_back(CreateNoteFragment(3));
+    notes.push_back(CreateNoteFragment(4));
+    notes.push_back(CreateNoteFragment(5));
+
+}
+// make sure you send your tPage before you send your notes
+void StageScene::SendNotes(eastl::vector<SpriteFragment> noteFrags) {
+    for (const auto &frag: noteFrags) {
+        g_ps1hero.gpu().sendFragment(frag);
+    }
 }
 
 void StageScene::frame() {
@@ -76,8 +95,7 @@ void StageScene::frame() {
     g_ps1hero.gpu().clear(col);
     g_ps1hero.gpu().sendFragment(StageTPageF);
     g_ps1hero.gpu().sendFragment(StageSpriteF);
-    psyqo::Vertex notePos = NoteSpriteFunc.sprite.position;
-
+    StageScene::SendNotes(notes);
 
 //    if (notePos.y >= static_cast<int16_t>(180)){
 //        NoteSpriteFunc.sprite.position =  {{125+72,13}};
@@ -86,11 +104,7 @@ void StageScene::frame() {
 //        NoteSpriteFunc.sprite.position = {{notePos.x, newPos}};
 //    }
 //    g_ps1hero.gpu().sendFragment(NoteSpriteFunc);
-      g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(2));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(3));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(4));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(5));
+
 }
 
 

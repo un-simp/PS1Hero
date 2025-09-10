@@ -10,11 +10,10 @@ src/FontManager.cpp\
 src/StageScene.cpp\
 src/assets.cpp\
 
-
+BUILD=Debug
 UNAME_S := $(shell uname -s)
 # Setting the minimum version of the C++. C++-20 is the minimum required version by PSYQo.
-CXXFLAGS = -std=c++20
-
+CXXFLAGS = -std=c++20 -Ithird_party/cxxmidi/include/cxxmidi
 # This will activate the PSYQo library and the rest of the toolchain.
 include third_party/nugget/psyqo/psyqo.mk
 # TODO: build assets binaries at runtime (maybe)

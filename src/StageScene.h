@@ -10,4 +10,6 @@ class StageScene final : public psyqo::Scene{
     void frame() override;
     void start(StartReason reason) override;
     SpriteFragment CreateNoteFragment(int pos);
+    void SendNotes(eastl::vector<SpriteFragment> noteFrags);
+
     };
