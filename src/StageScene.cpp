@@ -3,12 +3,12 @@
 //
 
 #include "StageScene.h"
-#include "EASTL/string.h"
+#include "EASTL/deque.h"
 #include "assets.h"
 #include "main.hh"
 TPageFragment StageTPageF;
 SpriteFragment StageSpriteF;
-SpriteFragment NoteSpriteFunc;
+eastl::deque<SpriteFragment> noteArr;
 
 SpriteFragment StageScene::CreateNoteFragment(int pos) {
     SpriteFragment outputFrag;
@@ -16,8 +16,6 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
     noteTexInfo.v = 1;
     psyqo::Prim::Sprite noteSprite;
     // pos 1 is 101, +24 for each pos
-//    eastl::string numStr = eastl::to_string(pos);
-//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{0,50}});
     // ReSharper disable once CppDefaultCaseNotHandledInSwitchStatement
     switch (pos){
         case 1:
@@ -42,16 +40,29 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
             break;
 
     }
-//    numStr = eastl::to_string(noteSprite.position.x);
-//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{100,50}});
-//    numStr = eastl::to_string(noteTexInfo.u);
-//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{150,50}});
     noteSprite.texInfo = noteTexInfo;
     noteSprite.size = {{21,4}};
     outputFrag.sprite = noteSprite;
-//    g_ps1hero.gpu().sendFragment(StageTPageF);
     return outputFrag;
 }
+
+void StageScene::CreateAndScrollNote(int pos) {
+    noteArr.push_back(CreateNoteFragment(pos));
+}
+void StageScene::TickNote() {
+    for (auto it = noteArr.begin(); it != noteArr.end(); ) {
+        SpriteFragment &note = *it;
+        g_ps1hero.gpu().sendFragment(note);
+        if (note.sprite.position.y >= static_cast<int16_t>(180)) {
+            it = noteArr.erase(it);
+            // miss here
+        } else {
+            note.sprite.position.y += 2;
+            ++it;
+        }
+    }
+}
+
 void StageScene::start(Scene::StartReason reason) {
     // upload notes and stage to vram
     psyqo::Rect StageRegion = {.pos = {{896,5}}, .size = {{121,200}}};
@@ -74,33 +85,27 @@ void StageScene::start(Scene::StartReason reason) {
     StageSprite.size = {{121,200}};
     StageSprite.position = {{99,10}};
     StageSpriteF.sprite = StageSprite;
-    NoteSpriteFunc = CreateNoteFragment(1);
+    CreateAndScrollNote(1);
+    CreateAndScrollNote(2);
+    CreateAndScrollNote(3);
+    CreateAndScrollNote(4);
+    CreateAndScrollNote(5);
 }
+
+
 
 void StageScene::frame() {
     psyqo::Color col = {{.r = 255,.g = 65, .b = 101}};
     g_ps1hero.gpu().clear(col);
     g_ps1hero.gpu().sendFragment(StageTPageF);
     g_ps1hero.gpu().sendFragment(StageSpriteF);
-    //psyqo::Vertex notePos = NoteSpriteFunc.sprite.position;
+    // run note logic
+    TickNote();
 
+    // if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
+    //     g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
+    // }
 
-//    if (notePos.y >= static_cast<int16_t>(180)){
-//        NoteSpriteFunc.sprite.position =  {{125+72,13}};
-//    }else{
-//        int16_t newPos = notePos.y+2;
-//        NoteSpriteFunc.sprite.position = {{notePos.x, newPos}};
-//    }
-//    g_ps1hero.gpu().sendFragment(NoteSpriteFunc);
-
-    if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
-        g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
-    }
-
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(2));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(3));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(4));
-//    g_ps1hero.gpu().sendFragment(CreateNoteFragment(5));
 }
 
 

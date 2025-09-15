@@ -11,4 +11,8 @@ class StageScene final : public psyqo::Scene{
     void start(StartReason reason) override;
 
     static SpriteFragment CreateNoteFragment(int pos);
+
+    static void CreateAndScrollNote(int pos);
+
+    static void TickNote();
     };
