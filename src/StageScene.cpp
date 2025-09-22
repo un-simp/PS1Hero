@@ -20,23 +20,23 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
     switch (pos){
         case 1:
             noteTexInfo.u = 2;
-            noteSprite.position = {{101,13}};
+            noteSprite.position = {{Notes::BROWN,13}};
             break;
         case 2:
             noteTexInfo.u = 26;
-            noteSprite.position = {{125,13}};
+            noteSprite.position = {{Notes::PINK,13}};
             break;
         case 3:
             noteTexInfo.u = 50;
-            noteSprite.position = {{149,13}};
+            noteSprite.position = {{Notes::BLUE,13}};
             break;
         case 4:
             noteTexInfo.u = 74;
-            noteSprite.position = {{173,13}};
+            noteSprite.position = {{Notes::GREEN,13}};
             break;
         case 5:
             noteTexInfo.u = 98;
-            noteSprite.position = {{197,13}};
+            noteSprite.position = {{Notes::YELLOW,13}};
             break;
 
     }
@@ -49,23 +49,49 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
 void StageScene::CreateAndScrollNote(int pos) {
     noteArr.push_back(CreateNoteFragment(pos));
 }
+// no
+// void StageScene::TickNote() {
+//     for (auto it = noteArr.begin(); it != noteArr.end(); ) {
+//         SpriteFragment &note = *it;
+//         g_ps1hero.gpu().sendFragment(note);
+//         // 190 is the start line
+//         // 200 is the miss line
+//         if (note.sprite.position.y >= static_cast<int16_t>(200)) {
+//             if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
+//                 note.sprite.position.y = 13;
+//             } else {
+//                 it = noteArr.erase(it);
+//             }
+//             // miss here
+//         } else {
+//             note.sprite.position.y += 2;
+//             ++it;
+//         }
+//     }
+// }
 void StageScene::TickNote() {
     for (auto it = noteArr.begin(); it != noteArr.end(); ) {
         SpriteFragment &note = *it;
         g_ps1hero.gpu().sendFragment(note);
+        // are you in the note acceptor range?
         if (note.sprite.position.y >= static_cast<int16_t>(180)) {
-            it = noteArr.erase(it);
-            // miss here
-        } else {
+            // did you press the key in time? if so hit
+            if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
+                note.sprite.position.y = 13; // temporary representation of a hit
+            }
+            // went pass the note acceptor, miss
+            if (note.sprite.position.y >= static_cast<int16_t>(220)) {
+                it = noteArr.erase(it);
+            }
+        }else {
             note.sprite.position.y += 2;
             ++it;
         }
     }
 }
-
 void StageScene::start(Scene::StartReason reason) {
     // upload notes and stage to vram
-    psyqo::Rect StageRegion = {.pos = {{896,5}}, .size = {{121,200}}};
+    psyqo::Rect StageRegion = {.pos = {{896,5}}, .size = {{121,190}}};
     g_ps1hero.gpu().uploadToVRAM(PS1HeroAssets::getStageData(),StageRegion);
     psyqo::Rect NoteRegion = {.pos = {{898,1}}, .size = {{120,4}}};
     g_ps1hero.gpu().uploadToVRAM(PS1HeroAssets::getNoteData(),NoteRegion);
@@ -86,10 +112,10 @@ void StageScene::start(Scene::StartReason reason) {
     StageSprite.position = {{99,10}};
     StageSpriteF.sprite = StageSprite;
     CreateAndScrollNote(1);
-    CreateAndScrollNote(2);
-    CreateAndScrollNote(3);
-    CreateAndScrollNote(4);
-    CreateAndScrollNote(5);
+    // CreateAndScrollNote(2);
+    // CreateAndScrollNote(3);
+    // CreateAndScrollNote(4);
+    // CreateAndScrollNote(5);
 }
 
 

@@ -7,6 +7,13 @@
 #include "fragment.h"
 
 class StageScene final : public psyqo::Scene{
+    enum Notes {
+        BROWN = 101,
+        PINK = 125,
+        BLUE = 149,
+        GREEN = 173,
+        YELLOW=197 };
+
     void frame() override;
     void start(StartReason reason) override;
 
@@ -15,4 +22,5 @@ class StageScene final : public psyqo::Scene{
     static void CreateAndScrollNote(int pos);
 
     static void TickNote();
+
     };

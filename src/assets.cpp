@@ -17,7 +17,7 @@
     ".balign 4\n"                        /* Word alignment */\
     ".section \".text\"\n")              /* Restore section */
 IMPORT_BIN("assets/font.bin",fontData);
-IMPORT_BIN("assets/teststage.bin",stageData);
+IMPORT_BIN("assets/TestStage2.bin",stageData);
 IMPORT_BIN("assets/testNote.bin",noteData);
 
 extern uint16_t fontData[];
