@@ -6,12 +6,13 @@
 #include "EASTL/deque.h"
 #include "assets.h"
 #include "main.hh"
+#include "note.h"
 TPageFragment StageTPageF;
 SpriteFragment StageSpriteF;
 int mult;
 int score;
 int combo;
-eastl::deque<SpriteFragment> noteArr;
+eastl::deque<Note> noteArr;
 
 SpriteFragment StageScene::CreateNoteFragment(int pos) {
     SpriteFragment outputFrag;
@@ -50,38 +51,21 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
 }
 
 void StageScene::CreateAndScrollNote(int pos) {
-    noteArr.push_back(CreateNoteFragment(pos));
+    noteArr.push_back(Note{REGULAR,CreateNoteFragment(pos)});
 }
-// no
-// void StageScene::TickNote() {
-//     for (auto it = noteArr.begin(); it != noteArr.end(); ) {
-//         SpriteFragment &note = *it;
-//         g_ps1hero.gpu().sendFragment(note);
-//         // 190 is the start line
-//         // 200 is the miss line
-//         if (note.sprite.position.y >= static_cast<int16_t>(200)) {
-//             if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
-//                 note.sprite.position.y = 13;
-//             } else {
-//                 it = noteArr.erase(it);
-//             }
-//             // miss here
-//         } else {
-//             note.sprite.position.y += 2;
-//             ++it;
-//         }
-//     }
-// }
+
 void StageScene::TickNote() {
     for (auto it = noteArr.begin(); it != noteArr.end(); ) {
-        SpriteFragment &note = *it;
+        auto &[type, noteFrag] = *it;
+        SpriteFragment &note = noteFrag;
         g_ps1hero.gpu().sendFragment(note);
         // are you in the note acceptor range?
         note.sprite.position.y += 2;
         if (note.sprite.position.y >= static_cast<int16_t>(186)) {
             // did you press the key in time? if so hit
-            if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
-                note.sprite.position.y = 13; // temporary representation of a hit
+            if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,posToButton(note.sprite.position.x))) {
+                scoreNote(type);
+            }
 
             } else if (note.sprite.position.y >= static_cast<int16_t>(200)) {
                 // went pass the note acceptor, miss
@@ -90,11 +74,9 @@ void StageScene::TickNote() {
                 ++it;
             }
 
-        }else {
-            ++it;
         }
     }
-}
+
 void StageScene::start(Scene::StartReason reason) {
     // upload notes and stage to vram
     psyqo::Rect StageRegion = {.pos = {{896,5}}, .size = {{121,190}}};
@@ -120,17 +102,22 @@ void StageScene::start(Scene::StartReason reason) {
     mult =1;
     score=0;
     CreateAndScrollNote(1);
-    // CreateAndScrollNote(2);
-    // CreateAndScrollNote(3);
-    // CreateAndScrollNote(4);
-    // CreateAndScrollNote(5);
 }
 
-void StageScene::scoreNote() {
-    score = score + (10*mult);
+void StageScene::scoreNote(const NoteTypes &noteType) {
+    switch (noteType) {
+        case NoteTypes::REGULAR:
+            score = score + (10*mult);
+            break;
+        case NoteTypes::CHORD:
+            // makes this easier by having the total of 30 being 15 handled in both notes (i dont want to do combo logic please)
+            score = score + (15*mult);
+        default: break;
+    }
+
     ++combo;
-    if ((combo % 2) == 0 & combo <50) {
-        mult = mult+10;
+    if ((combo % 10) == 0 & combo <50) {
+        mult = mult+1;
     }
 }
 
@@ -143,9 +130,6 @@ void StageScene::frame() {
     // run note logic
     TickNote();
 
-    // if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,psyqo::SimplePad::Button::Up)) {
-    //     g_ps1hero.gpu().sendFragment(CreateNoteFragment(1));
-    // }
 
 }
 
