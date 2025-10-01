@@ -7,6 +7,7 @@
 #include "assets.h"
 #include "main.hh"
 #include "note.h"
+#include "EASTL/string.h"
 TPageFragment StageTPageF;
 SpriteFragment StageSpriteF;
 int mult;
@@ -24,23 +25,23 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
     switch (pos){
         case 1:
             noteTexInfo.u = 2;
-            noteSprite.position = {{Notes::BROWN,13}};
+            noteSprite.position = {{NoteColour::BROWN,13}};
             break;
         case 2:
             noteTexInfo.u = 26;
-            noteSprite.position = {{Notes::PINK,13}};
+            noteSprite.position = {{NoteColour::PINK,13}};
             break;
         case 3:
             noteTexInfo.u = 50;
-            noteSprite.position = {{Notes::BLUE,13}};
+            noteSprite.position = {{NoteColour::BLUE,13}};
             break;
         case 4:
             noteTexInfo.u = 74;
-            noteSprite.position = {{Notes::GREEN,13}};
+            noteSprite.position = {{NoteColour::GREEN,13}};
             break;
         case 5:
             noteTexInfo.u = 98;
-            noteSprite.position = {{Notes::YELLOW,13}};
+            noteSprite.position = {{NoteColour::YELLOW,13}};
             break;
 
     }
@@ -59,23 +60,30 @@ void StageScene::TickNote() {
         auto &[type, noteFrag] = *it;
         SpriteFragment &note = noteFrag;
         g_ps1hero.gpu().sendFragment(note);
-        // are you in the note acceptor range?
+        // move note
         note.sprite.position.y += 2;
+
+        // has the note passed?
+        if (note.sprite.position.y >= static_cast<int16_t>(200)) {
+            // went pass the note acceptor, miss
+            it = noteArr.erase(it);
+            continue;
+        }
+
+        // are you in the note acceptor range?
         if (note.sprite.position.y >= static_cast<int16_t>(186)) {
             // did you press the key in time? if so hit
             if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,posToButton(note.sprite.position.x))) {
                 scoreNote(type);
-            }
-
-            } else if (note.sprite.position.y >= static_cast<int16_t>(200)) {
-                // went pass the note acceptor, miss
                 it = noteArr.erase(it);
-            }else {
-                ++it;
+                continue;
             }
-
         }
+        ++it;
+
     }
+}
+
 
 void StageScene::start(Scene::StartReason reason) {
     // upload notes and stage to vram
@@ -106,18 +114,19 @@ void StageScene::start(Scene::StartReason reason) {
 
 void StageScene::scoreNote(const NoteTypes &noteType) {
     switch (noteType) {
-        case NoteTypes::REGULAR:
+        case REGULAR:
             score = score + (10*mult);
             break;
-        case NoteTypes::CHORD:
+        case CHORD:
             // makes this easier by having the total of 30 being 15 handled in both notes (i dont want to do combo logic please)
             score = score + (15*mult);
         default: break;
     }
 
     ++combo;
+    // calculate multiplier
     if ((combo % 10) == 0 & combo <50) {
-        mult = mult+1;
+        ++mult;
     }
 }
 
@@ -129,6 +138,11 @@ void StageScene::frame() {
     g_ps1hero.gpu().sendFragment(StageSpriteF);
     // run note logic
     TickNote();
+    // Display current combo and score and mult
+    // TODO: Rewrite to use strings from the get go
+    g_ps1hero.m_font.print(g_ps1hero.gpu(),eastl::to_string(score).data(),{5,20});
+    g_ps1hero.m_font.print(g_ps1hero.gpu(),eastl::to_string(mult).data(),{5,50});
+    g_ps1hero.m_font.print(g_ps1hero.gpu(),eastl::to_string(combo).data(),{5,100});
 
 
 }

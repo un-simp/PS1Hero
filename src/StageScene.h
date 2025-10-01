@@ -25,17 +25,16 @@ class StageScene final : public psyqo::Scene{
         {GREEN,   psyqo::SimplePad::Button::R2},
         {YELLOW,  psyqo::SimplePad::Button::R1}}
    };
-    static constexpr psyqo::SimplePad::Button posToButton(int notePos) {
+    static constexpr psyqo::SimplePad::Button posToButton(const int notePos) {
         // search through all the binds
         for (const auto& entry : ControllerBinds) {
             // match to control
-            if (entry.first == noteColour) {
+            if (entry.first == notePos) {
                 return entry.second;
             }
         }
-
-        return 0;
     }
+
     void frame() override;
     void start(StartReason reason) override;
     static void scoreNote(const NoteTypes &noteType);

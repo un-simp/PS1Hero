@@ -12,7 +12,7 @@ void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Ver
      gpu.uploadToVRAM(PS1HeroAssets::getFontData(),region);
 }
 /**
- * @brief These method immediately print text to the screen.
+ * @brief These methods immediately print text to the screen.
  * you cannot scale this
  */
 void FontManager::print(psyqo::GPU &gpu, const char* text, psyqo::Vertex location) const {
