@@ -17,14 +17,5 @@ CXXFLAGS = -std=c++20
 
 # This will activate the PSYQo library and the rest of the toolchain.
 include third_party/nugget/psyqo/psyqo.mk
-# TODO: build assets binaries at runtime (maybe)
-# emu will run depending on os version (since i dev on both macos and linux)
-emu: all
-	ifeq($(UNAME_S),"Linux")
-	/home/un/Downloads/PCSX-Redux-HEAD-x86_64.AppImage -run -exe $(TARGET).$(TYPE) &
-	else
-		ifeq($(UNAME_S),"Darwin")
-		/Applications/PCSX-Redux.app/Contents/MacOS/PCSX-Redux -run -exe $(TARGET).$(TYPE) -debugger -fastboot &
-		endif
-	endif
+
 

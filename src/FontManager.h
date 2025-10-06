@@ -1,8 +1,8 @@
 //
 // Created by un on 20/07/2025.
 //
+#pragma once
 #include "psyqo/gpu.hh"
-#include "../third_party/nugget/psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/primitives.hh"
 class FontManager{
 private:
@@ -108,8 +108,8 @@ private:
 
 
 public:
-    void uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size);
-    void print(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
-    void printScaled(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
+    static void uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size);
+    void print(psyqo::GPU &gpu, const char* text, psyqo::Vertex location) const;
+    static void printScaled(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
 
 };

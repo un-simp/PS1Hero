@@ -3,29 +3,91 @@
 //
 
 #include "StageScene.h"
-//#include "EASTL/string.h"
+#include "EASTL/deque.h"
 #include "assets.h"
 #include "main.hh"
+#include "note.h"
+#include "EASTL/string.h"
 TPageFragment StageTPageF;
 SpriteFragment StageSpriteF;
-SpriteFragment NoteSpriteFunc;
+int mult;
+int score;
+int combo;
+eastl::deque<Note> noteArr;
 
 SpriteFragment StageScene::CreateNoteFragment(int pos) {
     SpriteFragment outputFrag;
     psyqo::PrimPieces::TexInfo noteTexInfo;
-    noteTexInfo.u = 2;
     noteTexInfo.v = 1;
     psyqo::Prim::Sprite noteSprite;
+    // pos 1 is 101, +24 for each pos
+    // ReSharper disable once CppDefaultCaseNotHandledInSwitchStatement
+    switch (pos){
+        case 1:
+            noteTexInfo.u = 2;
+            noteSprite.position = {{NoteColour::BROWN,13}};
+            break;
+        case 2:
+            noteTexInfo.u = 26;
+            noteSprite.position = {{NoteColour::PINK,13}};
+            break;
+        case 3:
+            noteTexInfo.u = 50;
+            noteSprite.position = {{NoteColour::BLUE,13}};
+            break;
+        case 4:
+            noteTexInfo.u = 74;
+            noteSprite.position = {{NoteColour::GREEN,13}};
+            break;
+        case 5:
+            noteTexInfo.u = 98;
+            noteSprite.position = {{NoteColour::YELLOW,13}};
+            break;
+
+    }
     noteSprite.texInfo = noteTexInfo;
     noteSprite.size = {{21,4}};
-    // pos 1 is 101, +24 for each pos
-    noteSprite.position = {{125+72,13}};
     outputFrag.sprite = noteSprite;
     return outputFrag;
 }
+
+void StageScene::CreateAndScrollNote(int pos) {
+    noteArr.push_back(Note{REGULAR,CreateNoteFragment(pos)});
+}
+
+void StageScene::TickNote() {
+    for (auto it = noteArr.begin(); it != noteArr.end(); ) {
+        auto &[type, noteFrag] = *it;
+        SpriteFragment &note = noteFrag;
+        g_ps1hero.gpu().sendFragment(note);
+        // move note
+        note.sprite.position.y += 2;
+
+        // has the note passed?
+        if (note.sprite.position.y >= static_cast<int16_t>(200)) {
+            // went pass the note acceptor, miss
+            it = noteArr.erase(it);
+            continue;
+        }
+
+        // are you in the note acceptor range?
+        if (note.sprite.position.y >= static_cast<int16_t>(186)) {
+            // did you press the key in time? if so hit
+            if (g_ps1hero.m_pad.isButtonPressed(psyqo::SimplePad::Pad1,posToButton(note.sprite.position.x))) {
+                scoreNote(type);
+                it = noteArr.erase(it);
+                continue;
+            }
+        }
+        ++it;
+
+    }
+}
+
+
 void StageScene::start(Scene::StartReason reason) {
     // upload notes and stage to vram
-    psyqo::Rect StageRegion = {.pos = {{896,5}}, .size = {{121,200}}};
+    psyqo::Rect StageRegion = {.pos = {{896,5}}, .size = {{121,190}}};
     g_ps1hero.gpu().uploadToVRAM(PS1HeroAssets::getStageData(),StageRegion);
     psyqo::Rect NoteRegion = {.pos = {{898,1}}, .size = {{120,4}}};
     g_ps1hero.gpu().uploadToVRAM(PS1HeroAssets::getNoteData(),NoteRegion);
@@ -45,25 +107,43 @@ void StageScene::start(Scene::StartReason reason) {
     StageSprite.size = {{121,200}};
     StageSprite.position = {{99,10}};
     StageSpriteF.sprite = StageSprite;
-    NoteSpriteFunc = CreateNoteFragment(1);
+    mult =1;
+    score=0;
+    CreateAndScrollNote(1);
 }
+
+void StageScene::scoreNote(const NoteTypes &noteType) {
+    switch (noteType) {
+        case REGULAR:
+            score = score + (10*mult);
+            break;
+        case CHORD:
+            // makes this easier by having the total of 30 being 15 handled in both notes (i dont want to do combo logic please)
+            score = score + (15*mult);
+        default: break;
+    }
+
+    ++combo;
+    // calculate multiplier
+    if ((combo % 10) == 0 & combo <50) {
+        ++mult;
+    }
+}
+
 
 void StageScene::frame() {
     psyqo::Color col = {{.r = 255,.g = 65, .b = 101}};
     g_ps1hero.gpu().clear(col);
     g_ps1hero.gpu().sendFragment(StageTPageF);
     g_ps1hero.gpu().sendFragment(StageSpriteF);
-    psyqo::Vertex notePos = NoteSpriteFunc.sprite.position;
-//    eastl::string numStr = eastl::to_string(notePos.y);
-//    g_ps1hero.m_font.print(g_ps1hero.gpu(),numStr.c_str(), {{0,0}});
+    // run note logic
+    TickNote();
+    // Display current combo and score and mult
+    // TODO: Rewrite to use strings from the get go
+    g_ps1hero.m_font.print(g_ps1hero.gpu(),eastl::to_string(score).data(),{5,20});
+    g_ps1hero.m_font.print(g_ps1hero.gpu(),eastl::to_string(mult).data(),{5,50});
+    g_ps1hero.m_font.print(g_ps1hero.gpu(),eastl::to_string(combo).data(),{5,100});
 
-    if (notePos.y >= static_cast<int16_t>(180)){
-        NoteSpriteFunc.sprite.position =  {{125+72,13}};
-    }else{
-        int16_t newPos = notePos.y+2;
-        NoteSpriteFunc.sprite.position = {{notePos.x, newPos}};
-    }
-    g_ps1hero.gpu().sendFragment(NoteSpriteFunc);
 
 }
 
