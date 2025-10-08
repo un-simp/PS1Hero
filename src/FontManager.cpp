@@ -5,7 +5,6 @@
 #include "FontManager.h"
 #include "assets.h"
 #include "fragment.h"
-
 // this feels wrong, the actual texture is embedded here at compile time, kill me.
 void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size) {
      psyqo::Rect region = {.pos = location, .size = size};
@@ -92,13 +91,13 @@ void FontManager::print(psyqo::GPU &gpu, eastl::string &text, psyqo::Vertex loca
 }
 
 // TODO: make this functional
-void FontManager::printScaled(psyqo::GPU &gpu, const char *text, psyqo::Vertex location) {
-    QuadFragment frag;
-    psyqo::Prim::TexturedQuad texQuad;
-    psyqo::PrimPieces::TPageAttr pageAttr;
-    pageAttr.setPageX(12)
-            .setPageY(1)
-                    // 16 bit textures can cross up to 4 texture pages
-            .set(psyqo::Prim::TPageAttr::Tex16Bits);
-    texQuad.tpage = pageAttr;
-}
+// void FontManager::printScaled(psyqo::GPU &gpu, const char *text, psyqo::Vertex location) {
+//     QuadFragment frag;
+//     psyqo::Prim::TexturedQuad texQuad;
+//     psyqo::PrimPieces::TPageAttr pageAttr;
+//     pageAttr.setPageX(12)
+//             .setPageY(1)
+//                     // 16 bit textures can cross up to 4 texture pages
+//             .set(psyqo::Prim::TPageAttr::Tex16Bits);
+//     texQuad.tpage = pageAttr;
+// }

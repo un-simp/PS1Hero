@@ -4,6 +4,7 @@
 #pragma once
 #include "psyqo/gpu.hh"
 #include "EASTL/string.h"
+#include "psyqo/primitives/sprites.hh"
 #include "../third_party/nugget/psyqo/primitives.hh"
 class FontManager{
 private:
@@ -111,9 +112,9 @@ private:
 public:
     static void uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size);
 
-    void print(psyqo::GPU &gpu, const char *text, psyqo::Vertex location);
+    void print(psyqo::GPU &gpu, const char *text, psyqo::Vertex location) const;
 
     void print(psyqo::GPU &gpu, eastl::string &text, psyqo::Vertex location) const;
-    static void printScaled(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
+    //static void printScaled(psyqo::GPU &gpu, const char* text, psyqo::Vertex location);
 
 };
