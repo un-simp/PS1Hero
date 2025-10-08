@@ -20,6 +20,7 @@ void PS1HeroMain::prepare() {
 void PS1HeroMain::createScene() {
     if (!m_init) {
         m_font.uploadFont(gpu(), {{.x = 767, .y = 256}}, {{.w = 256, .h = 71}});
+        m_pad.initialize();
         m_init = true;
     };
     pushScene(&m_stageScene);

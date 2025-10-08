@@ -1,8 +1,8 @@
 #pragma once
 #include "../third_party/nugget/psyqo/application.hh"
-#include "../third_party/nugget/psyqo/scene.hh"
 #include "FontManager.h"
 #include "StageScene.h"
+#include "psyqo/simplepad.hh"
 
 // A PSYQo software needs to declare one `Application` object.
 class PS1HeroMain final : public psyqo::Application {
@@ -14,6 +14,7 @@ class PS1HeroMain final : public psyqo::Application {
 public:
     FontManager m_font;
     StageScene m_stageScene;
+    psyqo::SimplePad m_pad;
 
 };
 
