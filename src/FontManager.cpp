@@ -1,11 +1,10 @@
 //
 // Created by un on 20/07/2025.
 //
-// ok so you know how we are embedding at compile time? yeah im importing this with assembly, this is so fucking cursed
 #include "FontManager.h"
 #include "assets.h"
 #include "fragment.h"
-// this feels wrong, the actual texture is embedded here at compile time, kill me.
+// this feels wrong, the actual texture is embedded here at compile time
 void FontManager::uploadFont(psyqo::GPU &gpu, psyqo::Vertex location, psyqo::Vertex size) {
      psyqo::Rect region = {.pos = location, .size = size};
      gpu.uploadToVRAM(PS1HeroAssets::getFontData(),region);
@@ -52,7 +51,7 @@ void FontManager::print(psyqo::GPU &gpu, const char* text, psyqo::Vertex locatio
         location = {static_cast<int16_t>(location.x + 15),location.y };
     }
 }
-
+//  the exact same function but takes in a string instead of a char array
 void FontManager::print(psyqo::GPU &gpu, eastl::string &text, psyqo::Vertex location) const {
     TPageFragment pageFrag;
     psyqo::Prim::TPage page;

@@ -2,13 +2,14 @@
 TARGET = hello
 # The type of the binary to be created - ps-exe is most common.
 TYPE = ps-exe
-
+CPPFLAGS += -Ithird_party/midi-parser/include
 # The list of sources files to compile within the binary.
 SRCS = \
 src/main.cpp \
 src/FontManager.cpp\
 src/StageScene.cpp\
 src/assets.cpp\
+third_party/midi-parser/src/midi-parser.c\
 
 
 UNAME_S := $(shell uname -s)

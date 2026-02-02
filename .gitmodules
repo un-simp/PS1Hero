@@ -1,0 +1,6 @@
+[submodule "third_party/midifile"]
+	path = third_party/midifile
+	url = https://github.com/craigsapp/midifile
+[submodule "third_party/midi-parser"]
+	path = third_party/midi-parser
+	url = https://github.com/abique/midi-parser/

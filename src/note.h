@@ -8,7 +8,7 @@
 enum NoteTypes {
     REGULAR,
     CHORD,
-    HOPO
+    HOPO // note that dosent require strumming
 };
 struct Note {
     NoteTypes type = REGULAR;
