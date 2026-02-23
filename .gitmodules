@@ -1,0 +1,6 @@
+[submodule "third_party/nugget"]
+	path = third_party/nugget
+	url = https://github.com/pcsx-redux/nugget
+[submodule "tools/baf"]
+	path = tools/baf
+	url = https://github.com/dansalvato/build-a-file
