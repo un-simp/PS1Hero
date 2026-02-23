@@ -17,7 +17,7 @@ class StageScene final : public psyqo::Scene{
         BLUE = 149,
         GREEN = 173,
         YELLOW=197 };
-    // static lookup table
+    // static lookup table for Controller Bindings
    static constexpr eastl::array<eastl::pair<NoteColour,psyqo::SimplePad::Button>,5> ControllerBinds{{
         {BROWN,   psyqo::SimplePad::Button::L1},
         {PINK,    psyqo::SimplePad::Button::L2},

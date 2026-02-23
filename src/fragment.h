@@ -1,7 +1,7 @@
 //
 // Created by un on 03/08/2025.
 //
-
+// Wrapper structs to fit them in the conditions required by the GPU class
 #ifndef PS1HERO_FRAGMENT_H
 #include "psyqo/gpu.hh"
 #include "../third_party/nugget/psyqo/primitives.hh"

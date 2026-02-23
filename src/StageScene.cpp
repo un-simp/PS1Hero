@@ -13,8 +13,12 @@ SpriteFragment StageSpriteF;
 int mult;
 int score;
 int combo;
+// double ended queue
 eastl::deque<Note> noteArr;
 
+
+// This is responsible to creating the actual graphic of the note, it takes in a position between 1 and 5 and will assign it based on the lane
+// it will then return a sprite that can then be sent to the gpu
 SpriteFragment StageScene::CreateNoteFragment(int pos) {
     SpriteFragment outputFrag;
     psyqo::PrimPieces::TexInfo noteTexInfo;
@@ -50,15 +54,17 @@ SpriteFragment StageScene::CreateNoteFragment(int pos) {
     outputFrag.sprite = noteSprite;
     return outputFrag;
 }
-
+// this sends the note to the back of the note queue
 void StageScene::CreateAndScrollNote(int pos) {
     noteArr.push_back(Note{REGULAR,CreateNoteFragment(pos)});
 }
-
+// main note logic
 void StageScene::TickNote() {
+    // go through all the notes in the array
     for (auto it = noteArr.begin(); it != noteArr.end(); ) {
         auto &[type, noteFrag] = *it;
         SpriteFragment &note = noteFrag;
+        // send the note to the gpu
         g_ps1hero.gpu().sendFragment(note);
         // move note
         note.sprite.position.y += 2;
@@ -112,13 +118,14 @@ void StageScene::start(Scene::StartReason reason) {
     CreateAndScrollNote(1);
 }
 
+// logic to calculate score, combo and multiplier
 void StageScene::scoreNote(const NoteTypes &noteType) {
     switch (noteType) {
         case REGULAR:
             score = score + (10*mult);
             break;
         case CHORD:
-            // makes this easier by having the total of 30 being 15 handled in both notes (i dont want to do combo logic please)
+            // makes this easier by having the total of 30 being 15 handled in both notes
             score = score + (15*mult);
         default: break;
     }

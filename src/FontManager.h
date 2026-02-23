@@ -9,6 +9,7 @@
 class FontManager{
 private:
     //xPos:  yPos: Width:  Height:  Advance:
+more     // lookup table that references the postitions and scales of each note in the font
     const int asciiLookup[0x7f][5] = {
             {47,  200, 14, 19, 0},
             {121, 37,  4,  17, 24},
