@@ -19,23 +19,30 @@ calculator = Calculator(Crc32.CRC32)
 
 
 
-
+# SUMMARY:  given a list of folders containing song data,
+# process midi info
+# compile ini to a binary format
+# stitch the ini and cover arts into a custom container
 def compile(songs):
-    # given a list of folders containing song data,
-    # process midi info
-    # compile ini to a binary format
-    # stitch the ini and cover arts into a custom container
     songInfo = []
     for i,v in enumerate(songs):
         songInfo.append(process_to_binary_format(v + "/song.ini",i))
         process_midi(v + "/notes.mid", v+"/notesPS1")
-    baf.build(MetaFile,
+    MetaDataFile = baf.build(MetaFile,
     {
         "tracks": songInfo
-    })
-
+    }).get_bytes()
+    # INFO: export to a file for embedding
+    with open("out.bin","wb") as f:
+        f.write(MetaDataFile)
+        checksum = calculator.checksum(MetaDataFile)
+        f.seek(0)
+        print(checksum)
+        f.write(MetaDataFile + checksum.to_bytes(4,"little"))
+        f.truncate()
+# SUMMARY: given an ini file, creates and returns a binary with them all represented
 def process_to_binary_format(inputini,id):
-    # given a ini file, creates and returns a binary with them all represented
+
     config = configparser.ConfigParser()
     config.read(inputini)
     # pull all the info needed
@@ -63,7 +70,7 @@ def process_to_binary_format(inputini,id):
     })
     return songInfoCompiled
 
-
+# SUMMARY:  only pull the guitar sections from the midi and append a CRC32 checksum to the end
 def process_midi(inputpath,outputpath):
     mid = mido.MidiFile(inputpath)
     new_midi = mido.MidiFile(ticks_per_beat=mid.ticks_per_beat)
